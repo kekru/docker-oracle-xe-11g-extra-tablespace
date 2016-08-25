@@ -7,4 +7,4 @@ RUN mkdir /docker-entrypoint-initdb.d \
  && chmod 777 /docker-entrypoint-initdb.d \
  && chmod -R 777 /data/resources
 
-CMD ["/data/resources/entrypoint.sh"]
+CMD /data/resources/entrypoint.sh && sleep infinity
