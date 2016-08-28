@@ -8,6 +8,7 @@ cp /data/resources/init.sql /docker-entrypoint-initdb.d/init.sql
 if [ -n "$crontabbackup" ]; then
     #install cronjob for oracle backup script
     echo "$crontabbackup /data/resources/orabackup.sh" | crontab -
+    cron
 fi
 
 /usr/sbin/startup.sh

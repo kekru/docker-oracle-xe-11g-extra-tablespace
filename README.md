@@ -26,10 +26,20 @@ And exit `exit`
 
 Now you can reach the SSH server via port 2222. For information on loginname and password see [wnameless/oracle-xe-11g](https://hub.docker.com/r/wnameless/oracle-xe-11g/).
 
-# Make it persistent
-To keep your oracle's data persistent on the host computer, mount `/u01/app/oracle/oradata/XE/` as a volume.  
-Example: `docker run -d -p 1521:1521 -v /home/me:/u01/app/oracle/oradata/XE/ whiledo/oracle-xe-11g-extra-tablespace`  
-This will store the tablespace files in /home/me on the host computer.
+# Backup via cronjob and restore
+Create a cronjob to backup your data.  
+Add `-e crontabbackup="0 23 * * *" -v <HostBackupDir>:/data/backup` to enable backups. The string after crontabbackup defines the interval the backup is created. It is crontab syntax, look [here](http://www.adminschoice.com/crontab-quick-reference) for more information about crontab syntax.  
+Backupfiles will be generated in /data/backup inside the container. So mount it, to keep it on your host computer.  
+Example: `docker run -d --name oracle123 -p 1521:1521 -e crontabbackup="0 23 * * *" -v /home/me:/data/backup whiledo/oracle-xe-11g-extra-tablespace`  
+This will create an backupfile via the `expdp` tool every day at 23:00 in `/home/me` on the hostcomputer.  
+
+EDIT: cron does actually not work, I have no idea why...  
+
+To create a backup directly, login to you container `docker exec -it oracle123 /bin/bash` and run `/data/resources/orabackup.sh`.  
+
+To import a backupfile log in to your container: `docker exec -it oracle123 /bin/bash`.  
+Then run `impdp system/oracle directory="pump_directory" dumpfile="ORACLE-EXPDAT-2016-08-28_21-51-46.DMP"`  
+where `oracle` is the password of user system and `ORACLE-EXPDAT-2016-08-28_21-51-46.DMP` the backup (dump) file inside the /data/backup directory.  
 
 # Define password
 The default password for users sys and system is oracle. To set the password on startup, add `-e syspasswd=newpassword` to the docker run command.  
