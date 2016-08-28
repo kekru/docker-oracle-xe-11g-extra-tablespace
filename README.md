@@ -31,5 +31,19 @@ To keep your oracle's data persistent on the host computer, mount `/u01/app/orac
 Example: `docker run -d -p 1521:1521 -v /home/me:/u01/app/oracle/oradata/XE/ whiledo/oracle-xe-11g-extra-tablespace`  
 This will store the tablespace files in /home/me on the host computer.
 
+# Define password
+The default password for users sys and system is oracle. To set the password on startup, add `-e syspasswd=newpassword` to the docker run command.  
+Example: `docker run -d -p 1521:1521 -e syspasswd=newpassword whiledo/oracle-xe-11g-extra-tablespace`  
+
 # More information
 This image is based on [wnameless/oracle-xe-11g](https://hub.docker.com/r/wnameless/oracle-xe-11g/). You will find more information there.
+
+Add `-e ORACLE_ALLOW_REMOTE=true` to the docker run command, if you want the database to be connected remotely.  
+The default settings are
+```  
+hostname: localhost
+port: 1521
+sid: xe
+username: system
+password: oracle
+```  

@@ -1,6 +1,7 @@
 FROM wnameless/oracle-xe-11g
 
-ENV maxsize 16G
+ENV maxsize="16G" \
+ syspasswd="oracle"
 
 ADD resources /data/resources
 RUN mkdir /docker-entrypoint-initdb.d \
