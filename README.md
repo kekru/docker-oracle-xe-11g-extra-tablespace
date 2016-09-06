@@ -41,7 +41,7 @@ To import a backupfile put it in the volume (/home/me in the example under "Crea
 `docker cp /home/me/ORACLE-EXPDAT-2016-09-06_19-42-22.DMP oracle123:/data/backup/`  
 
 Run the backup restore with  
-`docker exec oracledb /data/resources/oraimport.sh ORACLE-EXPDAT-2016-09-06_19-42-22.DMP`  
+`docker exec oracle123 /data/resources/oraimport.sh ORACLE-EXPDAT-2016-09-06_19-42-22.DMP`  
 
 # Define password
 The default password for users sys and system is oracle. To set the password on startup, add `-e syspasswd=newpassword` to the docker run command.  
