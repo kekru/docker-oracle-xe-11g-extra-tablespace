@@ -1,12 +1,12 @@
 FROM wnameless/oracle-xe-11g
+#:14.04.4
 
-RUN apt-get update && apt-get install -y \
-    nano \
-    cron
+#RUN apt-get update && apt-get install -y \
+#    nano
 
 ENV maxsize="16G" \
  syspasswd="oracle" \
- crontabbackup=""
+ timezone=""
 
 ADD resources /data/resources
 RUN mkdir /docker-entrypoint-initdb.d \

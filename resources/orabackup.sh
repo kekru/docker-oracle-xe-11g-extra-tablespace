@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ -z "$ORACLE_HOME" ]; then
+    export ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe
+    export PATH=$ORACLE_HOME/bin:$PATH
+    export ORACLE_SID=XE
+fi
+
 BASENAME="/data/backup"
 OUTPUTNAME1="ORACLE-EXPDAT-"
 CURRENTTIMESTAMP=$(date '+%Y-%m-%d_%H-%M-%S')
