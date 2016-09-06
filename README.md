@@ -26,7 +26,7 @@ And exit `exit`
 
 Now you can reach the SSH server via port 2222. For information on loginname and password see [wnameless/oracle-xe-11g](https://hub.docker.com/r/wnameless/oracle-xe-11g/).
 
-# Create a backup
+# Create a backup (expdp)
 Mount /data/backup as a volume `-v <HostBackupDir>:/data/backup`.  
 Backupfiles will be generated in /data/backup inside the container.  
 Example: `docker run -d --name oracle123 -p 1521:1521 -v /home/me:/data/backup whiledo/oracle-xe-11g-extra-tablespace`  
@@ -35,13 +35,23 @@ Run `docker exec oracle123 /data/resources/orabackup.sh`  to create the backupfi
 
 If you don't want to create a volume, you can also run `docker cp oracle123:/data/backup/ /home/me` to copy the backupfile to your hostcomputer.
 
-# Restore a backup
+# Restore a backup (impdp)
+This is how to import a file, that was created with expdp.   
 The backupfile has to be in /data/backup/ inside the container.  
 To import a backupfile put it in the volume (/home/me in the example under "Create a backup") or copy it in `/data/backup` inside the container with  
 `docker cp /home/me/ORACLE-EXPDAT-2016-09-06_19-42-22.DMP oracle123:/data/backup/`  
 
 Run the backup restore with  
 `docker exec oracle123 /data/resources/oraimport.sh ORACLE-EXPDAT-2016-09-06_19-42-22.DMP`  
+
+# Backup and restore via exp and imp
+If you have a backupfile created with exp (and not with expdp) which you want to import, you have to use imp.
+If you need a backupfile which is created with exp, you need exp.
+
+When you want to work with exp and imp and not expdp and impdp, go into your container with  
+`docker exec -it oracledb /bin/bash`.  
+then you can run exp and imp.  
+To copy a file from the host to the container or from container to host, use the `docker cp` command or a mounted volume.  
 
 # Define password
 The default password for users sys and system is oracle. To set the password on startup, add `-e syspasswd=newpassword` to the docker run command.  
