@@ -26,7 +26,7 @@ And exit `exit`
 
 Now you can reach the SSH server via port 2222. For information on loginname and password see [wnameless/oracle-xe-11g](https://hub.docker.com/r/wnameless/oracle-xe-11g/).
 
-# Create backup and restore it  
+# Create a backup
 Mount /data/backup as a volume `-v <HostBackupDir>:/data/backup`.  
 Backupfiles will be generated in /data/backup inside the container.  
 Example: `docker run -d --name oracle123 -p 1521:1521 -v /home/me:/data/backup whiledo/oracle-xe-11g-extra-tablespace`  
@@ -35,13 +35,21 @@ Run `docker exec oracle123 /data/resources/orabackup.sh`  to create the backupfi
 
 If you don't want to create a volume, you can also run `docker cp oracle123:/data/backup/ /home/me` to copy the backupfile to your hostcomputer.
 
-To import a backupfile log in to your container: `docker exec -it oracle123 /bin/bash`.  
-Then run `impdp system/oracle directory="pump_directory" dumpfile="ORACLE-EXPDAT-2016-08-28_21-51-46.DMP"`  
-where `oracle` is the password of user system and `ORACLE-EXPDAT-2016-08-28_21-51-46.DMP` the backup (dump) file inside the /data/backup directory.  
+# Restore a backup
+The backupfile has to be in /data/backup/ inside the container.  
+To import a backupfile put it in the volume (/home/me in the example under "Create a backup") or copy it in `/data/backup` inside the container with  
+`docker cp /home/me/ORACLE-EXPDAT-2016-09-06_19-42-22.DMP oracle123:/data/backup/`  
+
+Run the backup restore with  
+`docker exec oracledb /data/resources/oraimport.sh ORACLE-EXPDAT-2016-09-06_19-42-22.DMP`  
 
 # Define password
 The default password for users sys and system is oracle. To set the password on startup, add `-e syspasswd=newpassword` to the docker run command.  
 Example: `docker run -d -p 1521:1521 -e syspasswd=newpassword whiledo/oracle-xe-11g-extra-tablespace`  
+
+# Set timezone  
+To set a timezone for the container add `-e timezone="<your timezone>"` to the docker run command.  
+Example: `docker run -d --name oracle123 -p 1521:1521 -e timezone="Europe/Berlin" whiledo/oracle-xe-11g-extra-tablespace`  
 
 # More information
 This image is based on [wnameless/oracle-xe-11g](https://hub.docker.com/r/wnameless/oracle-xe-11g/). You will find more information there.
